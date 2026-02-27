@@ -19,3 +19,22 @@ console.log(habits);
 console.log(habit)
 console.log(habit[1].streak)
 console.log(habit[0].completeToday)
+
+function sayHello(){
+    console.log("Hello")
+}
+
+sayHello();
+
+function completeHabit(index){
+    if (!habit[index].completeToday){
+    habit[index].completeToday = true;
+    habit[index].streak += 1;
+    }
+    else
+    {console.log("You have already completed the task");}
+}
+
+completeHabit(0);
+
+console.log(habit);
