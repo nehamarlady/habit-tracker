@@ -14,8 +14,13 @@ export default function App() {
     if (!updatedHabits[index].completedToday) {
       updatedHabits[index].completedToday = true;
       updatedHabits[index].streak += 1;
+      setHabits(updatedHabits);
     }
-
+  }
+  function resetHabit(index){
+    const updatedHabits=[...habits];
+    updatedHabits[index].completedToday=false;
+    updatedHabits[index].streak=0;
     setHabits(updatedHabits);
   }
   function addHabit(){
@@ -44,17 +49,26 @@ export default function App() {
 
       {habits.map((habit, index) => (
         <View key={index} style={styles.habitContainer}>
-          <Text style={styles.habitText}>
+          <Text style={[styles.habitText,
+          habit.completedToday && styles.completedHabit]}>
             {habit.name} | 🔥 {habit.streak}
           </Text>
 
           <Button
-            title="Complete"
+            title={habit.completedToday ? "Completed" : "Complete"}
             onPress={() => completeHabit(index)}
+            disabled={habit.completedToday}
           />
+          <View style={{marginTop:5}}>
+            <Button
+            title="Reset"
+            onPress={()=> resetHabit(index)}
+            color="red"
+            />
         </View>
-      ))}
     </View>
+      ))}
+      </View>
   );
 }
 
@@ -79,10 +93,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   habitContainer: {
-    marginBottom: 20,
+    marginTop: 20,
+    padding:10,
+    borderWidth:1,
+    borderColor: "#eee",
+    borderRadius:8,
   },
   habitText: {
     fontSize: 18,
     marginBottom: 10,
+  },
+  completedHabit:{
+    color:"green",
+    fontWeight:"bold",
   },
 });
