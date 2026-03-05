@@ -1,13 +1,39 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { StyleSheet, Text, View, Button,TextInput } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
-  const [habits, setHabits] = useState([
-    { name: "Workout", streak: 3, completedToday: false },
-    { name: "Read", streak: 5, completedToday: false },
-  ]);
+  const [habits, setHabits] = useState([]);
+  const[newHabit, setNewHabit]=useState("");
 
-  const [newHabit, setNewHabit] = useState("");
+  //Load habits when app starts
+  useEffect(()=>{
+    loadHabits();
+  },[]);
+
+  //save habits whenever they chnage
+  useEffect(()=>{
+    saveHabits();
+  },[habits]);
+
+  async function saveHabits(){
+    try{
+      const jsonValue =JSON.stringify(habits);
+      await AsyncStorage.setItem('habits',jsonValue);
+    } catch(e){
+      console.log("Error saving habits");
+    }
+  }
+  async function loadHabits(){
+    try{
+      const jsonValue =await AsyncStorage.getItem('habits');
+      if(jsonValue != null){
+        setHabits(JSON.parse(jsonValue));
+      }
+    }catch(e){
+      console.log("Error loading habits");
+    }
+  }
   function completeHabit(index) {
     const updatedHabits = [...habits];
 
